@@ -8,7 +8,7 @@ export class QuestSystem {
       {
         id: 'insert',
         title: '1. Le Bâtisseur (INSERT)',
-        desc: 'Pose 3 blocs sur le terrain (touches 1 à 4)',
+        desc: 'Pose 3 blocs sur le terrain (touches 1 à 3 : Béton, Porte, Plante)',
         target: 3,
         current: 0,
         done: false,
@@ -17,7 +17,7 @@ export class QuestSystem {
       {
         id: 'update',
         title: "2. L'Artiste (UPDATE)",
-        desc: 'Repeins un bloc avec le Pinceau (touche 5)',
+        desc: 'Repeins un bloc avec le Pinceau (touche 4)',
         target: 1,
         current: 0,
         done: false,
@@ -26,7 +26,7 @@ export class QuestSystem {
       {
         id: 'delete',
         title: '3. Le Démolisseur (DELETE)',
-        desc: 'Détruis un bloc avec la Hache (touche 6)',
+        desc: 'Détruis un bloc avec la Hache (touche 5)',
         target: 1,
         current: 0,
         done: false,
@@ -35,7 +35,7 @@ export class QuestSystem {
       {
         id: 'count',
         title: "4. L'Analyste (SELECT & COUNT)",
-        desc: 'Sélectionne des blocs avec la Loupe (7) et clique Compter',
+        desc: 'Sélectionne des blocs avec la Loupe (touche 6) et clique Compter',
         target: 1,
         current: 0,
         done: false,

@@ -41,8 +41,8 @@
 
   <!-- Bottom Minecraft Hotbar -->
   <div class="hotbar-container">
-    <!-- Quick Color Selector -->
-    <div class="color-palette-bar">
+    <!-- Quick Color Selector (Shown only when using Pinceau) -->
+    <div class="color-palette-bar" style="display: none;">
       <span class="color-palette-label">Couleur :</span>
       <div class="color-choice active" data-color="rouge" title="Rouge"></div>
       <div class="color-choice" data-color="bleu" title="Bleu"></div>
@@ -52,59 +52,39 @@
       <span style="font-size: 10px; color: var(--text-muted);">(Touche C)</span>
     </div>
 
-    <!-- Hotbar Slots 1 to 7 -->
+    <!-- Hotbar Slots 1 to 6 -->
     <div class="minecraft-hotbar">
-      <div class="hotbar-slot active" data-slot="1" title="Poser une Maison (INSERT)">
+      <div class="hotbar-slot active" data-slot="1" title="Poser du Béton (INSERT)">
         <span class="slot-number">1</span>
-        <span class="slot-icon">🏠</span>
-        <span class="slot-label">Maison</span>
+        <span class="slot-icon">🧱</span>
+        <span class="slot-label">Béton</span>
       </div>
-      <div class="hotbar-slot" data-slot="2" title="Poser une Tour (INSERT)">
+      <div class="hotbar-slot" data-slot="2" title="Poser une Porte (INSERT)">
         <span class="slot-number">2</span>
-        <span class="slot-icon">🗼</span>
-        <span class="slot-label">Tour</span>
+        <span class="slot-icon">🚪</span>
+        <span class="slot-label">Porte</span>
       </div>
-      <div class="hotbar-slot" data-slot="3" title="Poser une Ferme (INSERT)">
+      <div class="hotbar-slot" data-slot="3" title="Poser une Plante / Fleur (INSERT)">
         <span class="slot-number">3</span>
-        <span class="slot-icon">🌾</span>
-        <span class="slot-label">Ferme</span>
+        <span class="slot-icon">🌿</span>
+        <span class="slot-label">Plante</span>
       </div>
-      <div class="hotbar-slot" data-slot="4" title="Poser un Pont (INSERT)">
+      <div class="hotbar-slot" data-slot="4" title="Repeindre un bloc avec le Pinceau (UPDATE)">
         <span class="slot-number">4</span>
-        <span class="slot-icon">🌉</span>
-        <span class="slot-label">Pont</span>
-      </div>
-      <div class="hotbar-slot" data-slot="5" title="Repeindre un bloc (UPDATE)">
-        <span class="slot-number">5</span>
         <span class="slot-icon">🎨</span>
         <span class="slot-label">Pinceau</span>
       </div>
-      <div class="hotbar-slot" data-slot="6" title="Détruire un bloc (DELETE)">
-        <span class="slot-number">6</span>
+      <div class="hotbar-slot" data-slot="5" title="Détruire un bloc avec la Hache (DELETE)">
+        <span class="slot-number">5</span>
         <span class="slot-icon">🪓</span>
         <span class="slot-label">Hache</span>
       </div>
-      <div class="hotbar-slot" data-slot="7" title="Sélectionner &amp; Requêter (SELECT / JOIN)">
-        <span class="slot-number">7</span>
+      <div class="hotbar-slot" data-slot="6" title="Sélectionner &amp; Requêter avec la Loupe (SELECT / JOIN)">
+        <span class="slot-number">6</span>
         <span class="slot-icon">🔍</span>
         <span class="slot-label">Loupe</span>
       </div>
     </div>
-  </div>
-
-  <!-- Persistent Keyboard Shortcuts Bar -->
-  <div id="hud-quick-hints" class="hud-hints-bar">
-    <span class="hint-item"><kbd>Tab</kbd> Souris libre</span>
-    <span class="hint-sep">•</span>
-    <span class="hint-item"><kbd>Entrée</kbd> Taper du SQL</span>
-    <span class="hint-sep">•</span>
-    <span class="hint-item"><kbd>M</kbd> Réduire Missions</span>
-    <span class="hint-sep">•</span>
-    <span class="hint-item"><kbd>J</kbd> Téléportation Zones</span>
-    <span class="hint-sep">•</span>
-    <span class="hint-item"><kbd>C</kbd> Couleur</span>
-    <span class="hint-sep">•</span>
-    <span class="hint-item"><kbd>T</kbd> Table BDD</span>
   </div>
 
   <!-- Start / Pause / Instructions Overlay -->
@@ -132,7 +112,7 @@
           <span class="guide-icon">🔢</span>
           <div>
             <div class="guide-title">Hotbar &amp; Outils</div>
-            <div class="guide-desc">Touches 1 à 7 ou Molette de la souris • Touche C pour changer de couleur</div>
+            <div class="guide-desc">Touches 1 à 6 ou Molette de la souris • Touche C pour changer de couleur</div>
           </div>
         </div>
         <div class="guide-card">

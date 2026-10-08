@@ -58,10 +58,9 @@ export class SelectionSystem {
           </button>
           <div class="dropdown-menu" id="filter-menu">
             <div class="dropdown-group-title">Filtrer par type</div>
-            <button class="dropdown-item" data-filter-type="maison">🏠 Maison</button>
-            <button class="dropdown-item" data-filter-type="tour">🗼 Tour</button>
-            <button class="dropdown-item" data-filter-type="ferme">🌾 Ferme</button>
-            <button class="dropdown-item" data-filter-type="pont">🌉 Pont</button>
+            <button class="dropdown-item" data-filter-type="beton">🧱 Béton</button>
+            <button class="dropdown-item" data-filter-type="porte">🚪 Porte</button>
+            <button class="dropdown-item" data-filter-type="plante">🌿 Plante</button>
             <div class="dropdown-group-title">Filtrer par couleur</div>
             <button class="dropdown-item" data-filter-color="rouge"><span class="color-dot red"></span> Rouge</button>
             <button class="dropdown-item" data-filter-color="bleu"><span class="color-dot blue"></span> Bleu</button>

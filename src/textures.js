@@ -24,142 +24,187 @@ function createBlockCanvas(type, colorName) {
   ctx.fillStyle = '#1e293b';
   ctx.fillRect(0, 0, size, size);
 
-  if (type === 'maison') {
-    // House / Cottage: Bricks, timber frame & roof accent
+  if (type === 'beton' || type === 'maison') {
+    // Concrete block (Béton) : Modern solid architectural concrete with tie holes and bevels
     ctx.fillStyle = baseColor;
     ctx.fillRect(4, 4, size - 8, size - 8);
 
-    // Brick pattern
-    ctx.strokeStyle = 'rgba(0,0,0,0.25)';
-    ctx.lineWidth = 2;
-    for (let y = 8; y < size - 8; y += 12) {
-      ctx.beginPath();
-      ctx.moveTo(4, y);
-      ctx.lineTo(size - 4, y);
-      ctx.stroke();
-
-      const offset = (y % 24 === 8) ? 0 : 8;
-      for (let x = 4 + offset; x < size - 8; x += 16) {
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(x, y + 12);
-        ctx.stroke();
-      }
+    // Subtle aggregate speckles
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    for (let i = 0; i < 35; i++) {
+      const rx = 6 + ((i * 17) % 52);
+      const ry = 6 + ((i * 23) % 52);
+      ctx.fillRect(rx, ry, 2, 2);
+    }
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+    for (let i = 0; i < 35; i++) {
+      const rx = 8 + ((i * 31) % 48);
+      const ry = 8 + ((i * 19) % 48);
+      ctx.fillRect(rx, ry, 2, 2);
     }
 
-    // Cozy central window
-    ctx.fillStyle = '#e2e8f0';
-    ctx.fillRect(22, 22, 20, 20);
-    ctx.fillStyle = '#38bdf8';
-    ctx.fillRect(24, 24, 16, 16);
-    // Window cross
-    ctx.strokeStyle = '#64748b';
+    // Concrete formwork seam line
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(32, 24); ctx.lineTo(32, 40);
-    ctx.moveTo(24, 32); ctx.lineTo(40, 32);
+    ctx.moveTo(4, 32); ctx.lineTo(size - 4, 32);
     ctx.stroke();
 
-    // Wooden timber border
-    ctx.strokeStyle = '#78350f';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(2, 2, size - 4, size - 4);
-  } 
-  else if (type === 'tour') {
-    // Castle Tower: Heavy stone masonry with arrow slit and battlements
-    ctx.fillStyle = '#64748b';
-    ctx.fillRect(4, 4, size - 8, size - 8);
-
-    // Stone blocks
-    ctx.strokeStyle = '#334155';
-    ctx.lineWidth = 3;
-    for (let y = 6; y < size - 6; y += 14) {
+    // 4 Formwork tie holes (architectural concrete look)
+    const tieHoles = [
+      [12, 12], [size - 12, 12],
+      [12, size - 12], [size - 12, size - 12]
+    ];
+    tieHoles.forEach(([hx, hy]) => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
       ctx.beginPath();
-      ctx.moveTo(4, y);
-      ctx.lineTo(size - 4, y);
-      ctx.stroke();
+      ctx.arc(hx, hy, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.beginPath();
+      ctx.arc(hx - 1, hy - 1, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    });
 
-      const offset = (y % 28 === 6) ? 0 : 12;
-      for (let x = 4 + offset; x < size - 6; x += 24) {
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(x, y + 14);
-        ctx.stroke();
-      }
+    // Beveled edges
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(2, size - 2); ctx.lineTo(2, 2); ctx.lineTo(size - 2, 2);
+    ctx.stroke();
+
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(size - 2, 2); ctx.lineTo(size - 2, size - 2); ctx.lineTo(2, size - 2);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(1, 1, size - 2, size - 2);
+  } 
+  else if (type === 'porte' || type === 'tour') {
+    // Door block (Porte) : Real recognizable wooden/steel door with frame, panels and golden knob
+    ctx.fillStyle = '#334155'; // Outer frame
+    ctx.fillRect(0, 0, size, size);
+
+    // Inner door slab
+    ctx.fillStyle = '#78350f'; // Rich timber
+    ctx.fillRect(6, 6, size - 12, size - 12);
+
+    // Vertical plank grooves
+    ctx.strokeStyle = '#451a03';
+    ctx.lineWidth = 2;
+    for (let x = 16; x < size - 8; x += 12) {
+      ctx.beginPath();
+      ctx.moveTo(x, 6); ctx.lineTo(x, size - 6);
+      ctx.stroke();
     }
 
-    // Color banner accent
+    // Top recessed door panel with color accent
     ctx.fillStyle = baseColor;
-    ctx.fillRect(16, 8, 32, 14);
+    ctx.fillRect(10, 10, size - 20, 18);
+    ctx.strokeStyle = '#292524';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(10, 10, size - 20, 18);
 
-    // Vertical arrow slit
+    // Bottom recessed door panel with color accent
+    ctx.fillStyle = baseColor;
+    ctx.fillRect(10, 34, size - 20, 20);
+    ctx.strokeStyle = '#292524';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(10, 34, size - 20, 20);
+
+    // Metallic hinges on left
     ctx.fillStyle = '#0f172a';
-    ctx.fillRect(29, 28, 6, 20);
+    ctx.fillRect(4, 14, 5, 8);
+    ctx.fillRect(4, 44, 5, 8);
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(5, 16, 2, 4);
+    ctx.fillRect(5, 46, 2, 4);
 
-    // Outer stone frame
+    // Golden door knob & keyhole plate on right
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(42, 28, 8, 14);
+    ctx.fillStyle = '#facc15'; // Golden knob
+    ctx.beginPath();
+    ctx.arc(46, 33, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fef08a'; // Knob reflection
+    ctx.fillRect(45, 31, 2, 2);
+    ctx.fillStyle = '#000000'; // Keyhole
+    ctx.fillRect(45, 38, 2, 3);
+
+    // Heavy frame border
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 4;
     ctx.strokeRect(2, 2, size - 4, size - 4);
   }
-  else if (type === 'ferme') {
-    // Farmland: Rich soil, crops / golden wheat & wood edge
-    ctx.fillStyle = '#78350f'; // Rich earth
+  else if (type === 'plante' || type === 'ferme') {
+    // Plant / Flower block (Plante / Fleur) : Lush foliage with vibrant colorful flowers
+    ctx.fillStyle = '#14532d'; // Deep foliage
     ctx.fillRect(4, 4, size - 8, size - 8);
 
-    // Farmland furrows
-    ctx.fillStyle = '#451a03';
-    for (let y = 10; y < size - 10; y += 12) {
-      ctx.fillRect(6, y, size - 12, 4);
-    }
+    // Leaves
+    ctx.fillStyle = '#16a34a';
+    const leaves = [
+      [8, 12, 14, 10], [38, 8, 16, 12],
+      [10, 40, 14, 12], [40, 42, 14, 10],
+      [22, 24, 20, 18]
+    ];
+    leaves.forEach(([lx, ly, lw, lh]) => {
+      ctx.beginPath();
+      ctx.ellipse(lx + lw / 2, ly + lh / 2, lw / 2, lh / 2, Math.PI / 4, 0, Math.PI * 2);
+      ctx.fill();
+    });
 
-    // Wheat stalks / crops (colored accents)
+    // Central blooming flower with baseColor petals
+    const cx = 32, cy = 32, r = 11;
     ctx.fillStyle = baseColor;
-    for (let x = 12; x < size - 12; x += 14) {
-      for (let y = 10; y < size - 12; y += 14) {
-        ctx.beginPath();
-        ctx.arc(x, y, 4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#fef08a'; // golden grain tips
-        ctx.fillRect(x - 1, y - 5, 2, 4);
-        ctx.fillStyle = baseColor;
-      }
-    }
+    const petalOffsets = [
+      [0, -r], [r, 0], [0, r], [-r, 0],
+      [-r * 0.7, -r * 0.7], [r * 0.7, -r * 0.7],
+      [-r * 0.7, r * 0.7], [r * 0.7, r * 0.7]
+    ];
+    petalOffsets.forEach(([px, py]) => {
+      ctx.beginPath();
+      ctx.arc(cx + px, cy + py, 6, 0, Math.PI * 2);
+      ctx.fill();
+    });
 
-    // Wooden planter border
-    ctx.strokeStyle = '#92400e';
-    ctx.lineWidth = 5;
+    // Golden pollen center
+    ctx.fillStyle = '#fde047';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ea580c';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2 small accent flower buds
+    [[14, 14], [50, 50]].forEach(([bx, by]) => {
+      ctx.fillStyle = baseColor;
+      ctx.beginPath();
+      ctx.arc(bx, by, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fde047';
+      ctx.beginPath();
+      ctx.arc(bx, by, 2, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Nature border
+    ctx.strokeStyle = '#15803d';
+    ctx.lineWidth = 4;
     ctx.strokeRect(2, 2, size - 4, size - 4);
   }
   else if (type === 'pont') {
-    // Bridge: Wooden planks with iron bolts and colored heraldry
+    // Bridge fallback
     ctx.fillStyle = '#b45309';
     ctx.fillRect(4, 4, size - 8, size - 8);
-
-    // Horizontal wooden planks
-    ctx.strokeStyle = '#78350f';
-    ctx.lineWidth = 3;
-    for (let y = 16; y < size; y += 16) {
-      ctx.beginPath();
-      ctx.moveTo(4, y);
-      ctx.lineTo(size - 4, y);
-      ctx.stroke();
-    }
-
-    // Center color stripe
     ctx.fillStyle = baseColor;
     ctx.fillRect(6, 26, size - 12, 12);
-
-    // Iron corner bolts
-    ctx.fillStyle = '#cbd5e1';
-    [10, size - 10].forEach(bx => {
-      [10, size - 10].forEach(by => {
-        ctx.beginPath();
-        ctx.arc(bx, by, 3, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    });
-
-    // Dark rustic frame
     ctx.strokeStyle = '#451a03';
     ctx.lineWidth = 4;
     ctx.strokeRect(2, 2, size - 4, size - 4);

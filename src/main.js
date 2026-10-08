@@ -65,20 +65,20 @@ class SQLCraftGame {
   // Pre-seed starter blocks across all 3 zones
   spawnStarterBlocks() {
     // Zone 1 : Nord (Z < 66)
-    this.blockManager.placeBlock('maison', 'rouge', { x: 12, y: 1, z: 20 });
-    this.blockManager.placeBlock('tour', 'bleu', { x: 23, y: 1, z: 20 });
-    this.blockManager.placeBlock('tour', 'bleu', { x: 23, y: 2, z: 20 }); // 2-high tower!
+    this.blockManager.placeBlock('beton', 'rouge', { x: 12, y: 1, z: 20 });
+    this.blockManager.placeBlock('porte', 'bleu', { x: 23, y: 1, z: 20 });
+    this.blockManager.placeBlock('plante', 'vert', { x: 23, y: 2, z: 20 });
 
     // Zone 2 : Sud (66 <= Z < 132)
-    this.blockManager.placeBlock('ferme', 'vert', { x: 12, y: 1, z: 85 });
-    this.blockManager.placeBlock('pont', 'jaune', { x: 23, y: 1, z: 85 });
+    this.blockManager.placeBlock('plante', 'vert', { x: 12, y: 1, z: 85 });
+    this.blockManager.placeBlock('beton', 'jaune', { x: 23, y: 1, z: 85 });
 
     // Zone 3 : Mégalopole des Bâtisseurs (Z >= 132)
-    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 1, z: 150 });
-    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 2, z: 150 });
-    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 3, z: 150 }); // 3-high skyscraper start!
-    this.blockManager.placeBlock('maison', 'rouge', { x: 14, y: 1, z: 150 });
-    this.blockManager.placeBlock('ferme', 'vert', { x: 20, y: 1, z: 150 });
+    this.blockManager.placeBlock('porte', 'jaune', { x: 17, y: 1, z: 150 });
+    this.blockManager.placeBlock('beton', 'jaune', { x: 17, y: 2, z: 150 });
+    this.blockManager.placeBlock('beton', 'jaune', { x: 17, y: 3, z: 150 });
+    this.blockManager.placeBlock('beton', 'rouge', { x: 14, y: 1, z: 150 });
+    this.blockManager.placeBlock('plante', 'vert', { x: 20, y: 1, z: 150 });
   }
 
   initUIBindings() {

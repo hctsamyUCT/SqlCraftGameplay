@@ -33,7 +33,7 @@ export class PlayerController {
     this.direction = new THREE.Vector3();
 
     // Hotbar state
-    // 1: Maison, 2: Tour, 3: Ferme, 4: Pont, 5: Pinceau, 6: Hache, 7: Loupe
+    // 1: Béton, 2: Porte, 3: Plante, 4: Pinceau, 5: Hache, 6: Loupe
     this.activeSlot = 1;
     this.activeColor = 'rouge'; // rouge, bleu, vert, jaune
     this.colorList = ['rouge', 'bleu', 'vert', 'jaune'];
@@ -113,7 +113,7 @@ export class PlayerController {
           this.isSprinting = true;
           break;
 
-        // Hotbar shortcuts (1 to 7)
+        // Hotbar shortcuts (1 to 6)
         case 'Digit1':
           this.setSlot(1);
           break;
@@ -131,9 +131,6 @@ export class PlayerController {
           break;
         case 'Digit6':
           this.setSlot(6);
-          break;
-        case 'Digit7':
-          this.setSlot(7);
           break;
 
         // Cycle Color (Key C)
@@ -221,11 +218,11 @@ export class PlayerController {
       if (!this.controls.isLocked) return;
       if (e.deltaY > 0) {
         let next = this.activeSlot + 1;
-        if (next > 7) next = 1;
+        if (next > 6) next = 1;
         this.setSlot(next);
       } else {
         let prev = this.activeSlot - 1;
-        if (prev < 1) prev = 7;
+        if (prev < 1) prev = 6;
         this.setSlot(prev);
       }
     }, { passive: true });
@@ -285,8 +282,8 @@ export class PlayerController {
     sound.playSelect();
     this.updateHUD();
 
-    // If slot 7 (Loupe), show selection toolbar; otherwise hide it so color palette is never blocked!
-    if (this.activeSlot === 7) {
+    // If slot 6 (Loupe), show selection toolbar; otherwise hide it
+    if (this.activeSlot === 6) {
       this.selectionSystem.showToolbar(true);
     } else {
       this.selectionSystem.showToolbar(false);
@@ -306,6 +303,12 @@ export class PlayerController {
   }
 
   updateHUD() {
+    // Show color palette bar ONLY when slot 4 (Pinceau) is active!
+    const paletteBar = document.querySelector('.color-palette-bar');
+    if (paletteBar) {
+      paletteBar.style.display = (this.activeSlot === 4) ? 'flex' : 'none';
+    }
+
     // Update active hotbar slot
     document.querySelectorAll('.hotbar-slot').forEach(slot => {
       const slotNum = parseInt(slot.getAttribute('data-slot'));
@@ -333,9 +336,9 @@ export class PlayerController {
     const hit = this.currentIntersection;
     const obj = hit.object;
 
-    // Slot 1-4: Place block
-    if (this.activeSlot >= 1 && this.activeSlot <= 4) {
-      const typeMap = { 1: 'maison', 2: 'tour', 3: 'ferme', 4: 'pont' };
+    // Slot 1-3: Place block (1: Béton, 2: Porte, 3: Plante)
+    if (this.activeSlot >= 1 && this.activeSlot <= 3) {
+      const typeMap = { 1: 'beton', 2: 'porte', 3: 'plante' };
       const blockType = typeMap[this.activeSlot];
       const targetPos = this.blockManager.getPlacementTarget(hit);
 
@@ -350,14 +353,14 @@ export class PlayerController {
         this.blockManager.placeBlock(blockType, this.activeColor, targetPos);
       }
     }
-    // Slot 5: Paintbrush (UPDATE)
-    else if (this.activeSlot === 5) {
+    // Slot 4: Paintbrush (UPDATE)
+    else if (this.activeSlot === 4) {
       if (obj.userData && obj.userData.isBlock) {
         this.blockManager.repaintBlock(obj.userData.id, this.activeColor);
       }
     }
-    // Slot 6: Axe / Destroy (DELETE)
-    else if (this.activeSlot === 6) {
+    // Slot 5: Axe / Destroy (DELETE)
+    else if (this.activeSlot === 5) {
       if (obj.userData && obj.userData.isBlock) {
         const id = obj.userData.id;
         // If block was selected in selectionSystem, remove it
@@ -367,8 +370,8 @@ export class PlayerController {
         this.blockManager.destroyBlock(id);
       }
     }
-    // Slot 7: Loupe (SELECT)
-    else if (this.activeSlot === 7) {
+    // Slot 6: Loupe (SELECT)
+    else if (this.activeSlot === 6) {
       if (obj.userData && obj.userData.isBlock) {
         this.selectionSystem.toggleBlockSelection(obj.userData.id);
       }

@@ -47,15 +47,14 @@ Chaque action dans l'univers de jeu met immédiatement à jour une base de donn�
 
 | Touche | Outil en jeu | Action en jeu | Requête SQL exécutée en direct | Concept Pédagogique (CRUD) |
 | :---: | :---: | :---: | :--- | :--- |
-| **1** | 🏠 **Maison** | Clic pour poser | `INSERT INTO blocs (type, couleur, x, y, z, zone_id) VALUES ('maison', 'rouge', ...);` | **Create (INSERT)** : Ajout d'une ligne avec clé primaire (`id`). |
-| **2** | 🗼 **Tour** | Clic pour poser | `INSERT INTO blocs (...) VALUES ('tour', ...);` | **Create (INSERT)** : Empilement en hauteur (`y`). |
-| **3** | 🌾 **Ferme** | Clic pour poser | `INSERT INTO blocs (...) VALUES ('ferme', ...);` | **Create (INSERT)**. |
-| **4** | 🌉 **Pont** | Clic pour poser | `INSERT INTO blocs (...) VALUES ('pont', ...);` | **Create (INSERT)** : Construction au-dessus de la rivière. |
-| **5** | 🎨 **Pinceau** | Viser un bloc + clic | `UPDATE blocs SET couleur = 'bleu' WHERE id = 3;` | **Update (UPDATE)** : Modification ciblée par clé primaire. |
-| **6** | 🪓 **Hache** | Viser un bloc + clic | `DELETE FROM blocs WHERE id = 2;` | **Delete (DELETE)** : Suppression de ligne avec explosion de débris. |
-| **7** | 🔍 **Loupe** | Clic sur des blocs | `SELECT * FROM blocs WHERE id IN (1, 4);` | **Read (SELECT)** : Sélection avec halos lumineux et tags 3D. |
+| **1** | 🧱 **Béton** | Clic pour poser | `INSERT INTO blocs (type, couleur, x, y, z, zone_id) VALUES ('beton', 'rouge', ...);` | **Create (INSERT)** : Bloc d'architecture solide avec clé primaire (`id`). |
+| **2** | 🚪 **Porte** | Clic pour poser | `INSERT INTO blocs (...) VALUES ('porte', ...);` | **Create (INSERT)** : Bloc porte avec poignée dorée et vantaux. |
+| **3** | 🌿 **Plante** | Clic pour poser | `INSERT INTO blocs (...) VALUES ('plante', ...);` | **Create (INSERT)** : Bloc végétal fleuri colorable. |
+| **4** | 🎨 **Pinceau** | Viser un bloc + clic | `UPDATE blocs SET couleur = 'bleu' WHERE id = 3;` | **Update (UPDATE)** : Modification ciblée (ouvre la palette de couleur). |
+| **5** | 🪓 **Hache** | Viser un bloc + clic | `DELETE FROM blocs WHERE id = 2;` | **Delete (DELETE)** : Suppression de ligne avec explosion de débris. |
+| **6** | 🔍 **Loupe** | Clic sur des blocs | `SELECT * FROM blocs WHERE id IN (1, 4);` | **Read (SELECT)** : Sélection avec halos lumineux et tags 3D. |
 | **🔍 > 📋** | **Afficher** | Clic sur la toolbar | `SELECT * FROM blocs WHERE id IN (...);` | **Read (SELECT)** : Consultation des données brutes. |
-| **🔍 > 🔍** | **Filtrer** | Menu déroulant | `SELECT * FROM blocs WHERE type = 'maison';` | Clause **WHERE** (filtre par type ou par couleur). |
+| **🔍 > 🔍** | **Filtrer** | Menu déroulant | `SELECT * FROM blocs WHERE type = 'beton';` | Clause **WHERE** (filtre par type ou par couleur). |
 | **🔍 > ↕️** | **Trier** | Menu déroulant | `SELECT * FROM blocs ORDER BY x ASC;` | Clause **ORDER BY** (badges numérotés 3D en jeu). |
 | **🔍 > 🔢** | **Compter** | Bouton | `SELECT COUNT(*) FROM blocs;` | Fonction d'agrégation **COUNT()**. |
 | **🔍 > 🔗** | **Relier** | Bouton | `SELECT blocs.id, zones.nom FROM blocs JOIN zones ON zones.id = blocs.zone_id;` | **Jointure relationnelle (JOIN)** : Faisceaux laser 3D reliant les blocs aux totems de zone et entre Nord et Sud ! |
@@ -80,10 +79,10 @@ En appuyant sur **`T`** ou via le bouton **📊 Base de Données** dans l'en-tê
 ## 🎯 Système de Missions & Diplôme BUT SD
 
 Un panneau de quêtes guide le joueur à travers 5 missions progressives :
-- [x] **Mission 1 : Le Bâtisseur (INSERT)** — Pose 3 blocs sur le terrain.
-- [x] **Mission 2 : L'Artiste (UPDATE)** — Repeins un bloc avec le Pinceau (touche 5).
-- [x] **Mission 3 : Le Démolisseur (DELETE)** — Détruis un bloc avec la Hache (touche 6).
-- [x] **Mission 4 : L'Analyste (SELECT & COUNT)** — Sélectionne des blocs avec la Loupe (touche 7) et compte-les.
+- [x] **Mission 1 : Le Bâtisseur (INSERT)** — Pose 3 blocs sur le terrain (touches 1 à 3 : Béton, Porte, Plante).
+- [x] **Mission 2 : L'Artiste (UPDATE)** — Repeins un bloc avec le Pinceau (touche 4).
+- [x] **Mission 3 : Le Démolisseur (DELETE)** — Détruis un bloc avec la Hache (touche 5).
+- [x] **Mission 4 : L'Analyste (SELECT & COUNT)** — Sélectionne des blocs avec la Loupe (touche 6) et compte-les.
 - [x] **Mission 5 : L'Architecte Données (JOIN)** — Pose au moins un bloc au Nord et un au Sud, puis clique sur **Relier** !
 
 🎉 **Récompense finale** : Pluie de confettis, fanfare de victoire et affichage d'un diplôme d'initiation présentant les débouchés passionnants du **BUT Science des Données** (Big Data, Intelligence Artificielle, Python, Dataviz).
