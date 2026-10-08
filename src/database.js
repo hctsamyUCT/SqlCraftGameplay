@@ -1,9 +1,11 @@
-// In-Memory Relational Database Engine for SQL Craft
+import { GRID_SIZE } from './world.js';
+
 export class GameDatabase {
   constructor() {
     this.zones = [
       { id: 1, nom: 'Zone Nord', biome: 'Plaine Verdoyante', sol: 'Herbe Émeraude' },
-      { id: 2, nom: 'Zone Sud', biome: 'Rivage Cristallin', sol: 'Quartz Azur' }
+      { id: 2, nom: 'Zone Sud', biome: 'Rivage Cristallin', sol: 'Quartz Azur' },
+      { id: 3, nom: 'Zone Mégalopole', biome: 'Plateau des Bâtisseurs (x4)', sol: 'Dalles Dorées & Marbre' }
     ];
 
     this.blocs = [];
@@ -20,9 +22,14 @@ export class GameDatabase {
     this.listeners.forEach(cb => cb(payload));
   }
 
-  // Get zone for a given Z coordinate (grid 0..15, split at 8)
+  // Get zone for a given Z coordinate:
+  // - Z < 18 : Zone 1 (Zone Nord)
+  // - Z >= 18 && Z < 36 : Zone 2 (Zone Sud)
+  // - Z >= 36 : Zone 3 (Zone Mégalopole - 4x plus grande)
   getZoneId(z) {
-    return z < 8 ? 1 : 2;
+    if (z < 18) return 1;
+    if (z < 36) return 2;
+    return 3;
   }
 
   getZone(zoneId) {
@@ -202,7 +209,8 @@ export class GameDatabase {
       };
     });
 
-    const hasBothZones = joinedResults.some(r => r.zone_id === 1) && joinedResults.some(r => r.zone_id === 2);
+    const uniqueZones = new Set(joinedResults.map(r => r.zone_id));
+    const hasBothZones = uniqueZones.size >= 2;
 
     let query = `SELECT blocs.id, blocs.type, blocs.couleur, zones.nom AS nom_zone, zones.biome\nFROM blocs\nJOIN zones ON zones.id = blocs.zone_id`;
     if (ids && ids.length > 0) {
@@ -211,7 +219,7 @@ export class GameDatabase {
       query += `;`;
     }
 
-    const explanation = `🔗 JOIN ... ON zones.id = blocs.zone_id :\nC'est la magie relationnelle ! Les deux tables ('blocs' et 'zones') sont reliées via la clé étrangère 'zone_id'. ${hasBothZones ? '⭐ Tu as bien relié la Zone Nord et la Zone Sud !' : '💡 Astuce : place des blocs au Nord ET au Sud pour voir le lien entre les deux zones !'}`;
+    const explanation = `🔗 JOIN ... ON zones.id = blocs.zone_id :\nC'est la magie relationnelle ! Les tables ('blocs' et 'zones') sont reliées via la clé étrangère 'zone_id'. ${hasBothZones ? `⭐ Tu as relié ${uniqueZones.size} zones différentes (Nord, Sud, Mégalopole) !` : '💡 Astuce : place des blocs dans différentes zones pour voir le lien relationnel !'}`;
 
     this.emitQuery({
       query,

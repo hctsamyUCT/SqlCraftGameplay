@@ -44,7 +44,7 @@ export class QuestSystem {
       {
         id: 'join',
         title: "5. L'Architecte Données (JOIN)",
-        desc: 'Pose des blocs au Nord ET au Sud, puis clique sur Relier',
+        desc: 'Pose des blocs dans au moins 2 zones différentes, puis clique sur Relier',
         target: 1,
         current: 0,
         done: false,

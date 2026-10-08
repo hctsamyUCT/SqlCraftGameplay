@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { db } from './database.js';
-import { GameWorld } from './world.js';
+import { GameWorld, GRID_SIZE } from './world.js';
 import { BlockManager } from './blockManager.js';
 import { SelectionSystem } from './selectionSystem.js';
 import { SQLConsole } from './sqlConsole.js';
@@ -61,16 +61,23 @@ class SQLCraftGame {
     requestAnimationFrame(this.animate);
   }
 
-  // Pre-seed a few colorful starter blocks in both zones
+  // Pre-seed starter blocks across all 3 zones
   spawnStarterBlocks() {
-    // Zone Nord (Z < 8)
-    this.blockManager.placeBlock('maison', 'rouge', { x: 5, y: 1, z: 4 });
-    this.blockManager.placeBlock('tour', 'bleu', { x: 9, y: 1, z: 4 });
-    this.blockManager.placeBlock('tour', 'bleu', { x: 9, y: 2, z: 4 }); // 2-high tower!
+    // Zone 1 : Nord (Z < 16)
+    this.blockManager.placeBlock('maison', 'rouge', { x: 12, y: 1, z: 7 });
+    this.blockManager.placeBlock('tour', 'bleu', { x: 23, y: 1, z: 7 });
+    this.blockManager.placeBlock('tour', 'bleu', { x: 23, y: 2, z: 7 }); // 2-high tower!
 
-    // Zone Sud (Z >= 8)
-    this.blockManager.placeBlock('ferme', 'vert', { x: 5, y: 1, z: 11 });
-    this.blockManager.placeBlock('pont', 'jaune', { x: 9, y: 1, z: 11 });
+    // Zone 2 : Sud (18 <= Z < 34)
+    this.blockManager.placeBlock('ferme', 'vert', { x: 12, y: 1, z: 24 });
+    this.blockManager.placeBlock('pont', 'jaune', { x: 23, y: 1, z: 24 });
+
+    // Zone 3 : Mégalopole des Bâtisseurs (Z >= 36) - Espace géant x4
+    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 1, z: 50 });
+    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 2, z: 50 });
+    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 3, z: 50 }); // 3-high skyscraper start!
+    this.blockManager.placeBlock('maison', 'rouge', { x: 14, y: 1, z: 50 });
+    this.blockManager.placeBlock('ferme', 'vert', { x: 20, y: 1, z: 50 });
   }
 
   initUIBindings() {

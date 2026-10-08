@@ -35,7 +35,7 @@ export class DataViewer {
 
         <div class="modal-tabs">
           <button class="tab-btn active" data-tab="blocs">📦 Table: <code>blocs</code> (<span id="count-tab-blocs">0</span>)</button>
-          <button class="tab-btn" data-tab="zones">🗺️ Table: <code>zones</code> (2)</button>
+          <button class="tab-btn" data-tab="zones">🗺️ Table: <code>zones</code> (3)</button>
           <button class="tab-btn" data-tab="join">🔗 Vue Relationnelle (<code>JOIN</code>)</button>
         </div>
 

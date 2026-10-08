@@ -310,9 +310,11 @@ export class SelectionSystem {
     ctx.textAlign = 'center';
     ctx.fillText(`id: ${id}`, 80, 26);
 
-    ctx.fillStyle = data.zoneId === 1 ? '#4ade80' : '#38bdf8';
+    const zoneColorMap = { 1: '#4ade80', 2: '#38bdf8', 3: '#fbbf24' };
+    const zoneNameMap = { 1: 'Nord', 2: 'Sud', 3: 'Mégalopole' };
+    ctx.fillStyle = zoneColorMap[data.zoneId] || '#fbbf24';
     ctx.font = '14px monospace';
-    ctx.fillText(`zone: ${data.zoneId === 1 ? 'Nord' : 'Sud'}`, 80, 48);
+    ctx.fillText(`zone: ${zoneNameMap[data.zoneId] || 'Mégalopole'}`, 80, 48);
 
     const texture = new THREE.CanvasTexture(canvas);
     const mat = new THREE.SpriteMaterial({ map: texture, depthTest: false });

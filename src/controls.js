@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { COLOR_MAP } from './textures.js';
 import { sound } from './sound.js';
+import { GRID_WIDTH, GRID_DEPTH } from './world.js';
 
 export class PlayerController {
   constructor(camera, domElement, scene, blockManager, selectionSystem, dataViewer) {
@@ -14,9 +15,10 @@ export class PlayerController {
 
     this.controls = new PointerLockControls(camera, document.body);
 
-    // Initial camera position (standing in Zone Nord, looking toward Zone Sud)
-    this.camera.position.set(7.5, 2.6, 2.0);
-    this.camera.lookAt(7.5, 1.5, 7.5);
+    // Initial camera position (standing in Zone Nord, looking toward Zone Sud across the vast world)
+    const centerX = GRID_WIDTH / 2 - 0.5;
+    this.camera.position.set(centerX, 2.6, 4.0);
+    this.camera.lookAt(centerX, 1.5, 25.0);
 
     // Movement state
     this.moveForward = false;
@@ -137,6 +139,11 @@ export class PlayerController {
         case 'KeyT':
           this.dataViewer.toggle();
           break;
+
+        // Cycle Teleport between Zones (Key J)
+        case 'KeyJ':
+          this.cycleZoneTeleport();
+          break;
       }
     };
 
@@ -211,6 +218,16 @@ export class PlayerController {
         this.setColor(color);
       };
     });
+
+    // Bind zone teleport buttons
+    const tp1 = document.getElementById('tp-zone-1');
+    if (tp1) tp1.onclick = () => this.teleportToZone(1);
+
+    const tp2 = document.getElementById('tp-zone-2');
+    if (tp2) tp2.onclick = () => this.teleportToZone(2);
+
+    const tp3 = document.getElementById('tp-zone-3');
+    if (tp3) tp3.onclick = () => this.teleportToZone(3);
 
     this.updateHUD();
   }
@@ -308,6 +325,36 @@ export class PlayerController {
     }
   }
 
+  teleportToZone(zoneId) {
+    const centerX = GRID_WIDTH / 2 - 0.5;
+    this.velocity.set(0, 0, 0);
+    if (zoneId === 1) {
+      this.camera.position.set(centerX, 2.6, 5.0);
+      this.camera.lookAt(centerX, 1.5, 20.0);
+      this.selectionSystem.flashNotice("📍 Téléporté en Zone 1 : Plaine Verdoyante");
+    } else if (zoneId === 2) {
+      this.camera.position.set(centerX, 2.6, 22.0);
+      this.camera.lookAt(centerX, 1.5, 36.0);
+      this.selectionSystem.flashNotice("📍 Téléporté en Zone 2 : Rivage Cristallin");
+    } else if (zoneId === 3) {
+      this.camera.position.set(centerX, 2.6, 42.0);
+      this.camera.lookAt(centerX, 1.5, 80.0);
+      this.selectionSystem.flashNotice("⭐ Téléporté en Zone 3 : Mégalopole (x4 d'espace) !");
+    }
+    sound.playSelect();
+  }
+
+  cycleZoneTeleport() {
+    const currentZ = this.camera.position.z;
+    if (currentZ < 18) {
+      this.teleportToZone(2);
+    } else if (currentZ < 36) {
+      this.teleportToZone(3);
+    } else {
+      this.teleportToZone(1);
+    }
+  }
+
   // Update loop called every frame
   update(delta) {
     // 1. Raycast for targeted block
@@ -336,7 +383,7 @@ export class PlayerController {
       this.direction.x = Number(this.moveRight) - Number(this.moveLeft);
       this.direction.normalize();
 
-      const speedMultiplier = this.isSprinting ? 65.0 : 40.0;
+      const speedMultiplier = this.isSprinting ? 75.0 : 45.0;
 
       if (this.moveForward || this.moveBackward) {
         this.velocity.z -= this.direction.z * speedMultiplier * delta;
@@ -371,9 +418,9 @@ export class PlayerController {
         this.canJump = true;
       }
 
-      // Constrain within world boundaries (0 to 15)
-      this.camera.position.x = Math.max(-0.2, Math.min(15.2, this.camera.position.x));
-      this.camera.position.z = Math.max(-0.2, Math.min(15.2, this.camera.position.z));
+      // Constrain within world boundaries (0 to GRID_WIDTH - 1, 0 to GRID_DEPTH - 1)
+      this.camera.position.x = Math.max(-0.2, Math.min(GRID_WIDTH - 0.8, this.camera.position.x));
+      this.camera.position.z = Math.max(-0.2, Math.min(GRID_DEPTH - 0.8, this.camera.position.z));
     }
   }
 }

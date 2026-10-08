@@ -274,3 +274,58 @@ export function createWaterTexture() {
   texture.colorSpace = THREE.SRGBColorSpace;
   return texture;
 }
+
+// Generate premium architectural pavement for Zone 3 (Grand Plateau Mégalopole)
+export function createZone3Texture() {
+  const size = 64;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+
+  // Deep architectural slate base
+  ctx.fillStyle = '#1e293b';
+  ctx.fillRect(0, 0, size, size);
+
+  // Marble tile quadrants
+  ctx.fillStyle = '#334155';
+  ctx.fillRect(3, 3, 27, 27);
+  ctx.fillRect(34, 3, 27, 27);
+  ctx.fillRect(3, 34, 27, 27);
+  ctx.fillRect(34, 34, 27, 27);
+
+  // Subtle marble flecks
+  ctx.fillStyle = '#475569';
+  for (let i = 0; i < 24; i++) {
+    const rx = Math.floor(Math.random() * size);
+    const ry = Math.floor(Math.random() * size);
+    ctx.fillRect(rx, ry, 2, 2);
+  }
+
+  // Golden builder grid lines & corner inlays
+  ctx.strokeStyle = '#d97706';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(2, 2, 60, 60);
+
+  ctx.strokeStyle = '#fbbf24';
+  ctx.beginPath();
+  ctx.moveTo(32, 0); ctx.lineTo(32, size);
+  ctx.moveTo(0, 32); ctx.lineTo(size, 32);
+  ctx.stroke();
+
+  // Golden central rosette / diamond
+  ctx.fillStyle = '#f59e0b';
+  ctx.beginPath();
+  ctx.moveTo(32, 28);
+  ctx.lineTo(36, 32);
+  ctx.lineTo(32, 36);
+  ctx.lineTo(28, 32);
+  ctx.closePath();
+  ctx.fill();
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}

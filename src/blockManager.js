@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { getBlockTexture, COLOR_MAP } from './textures.js';
 import { sound } from './sound.js';
-import { GRID_SIZE } from './world.js';
+import { GRID_WIDTH, GRID_DEPTH } from './world.js';
 
 export class BlockManager {
   constructor(scene, db) {
@@ -68,8 +68,8 @@ export class BlockManager {
   placeBlock(type, couleur, targetCoord) {
     const { x, y, z } = targetCoord;
 
-    // Boundary check
-    if (x < 0 || x >= GRID_SIZE || z < 0 || z >= GRID_SIZE || y < 1 || y > 10) {
+    // Boundary check (within grid boundaries and height limit up to 40 for mega-buildings)
+    if (x < 0 || x >= GRID_WIDTH || z < 0 || z >= GRID_DEPTH || y < 1 || y > 40) {
       return null;
     }
 

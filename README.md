@@ -23,13 +23,16 @@ En **BUT Science des Données**, la manipulation des données est au cœur de to
 
 ---
 
-## 🗺️ Le Monde 3D Voxel
+## 🗺️ Le Monde 3D Voxel (3 Zones & Espace Monumental)
 
-- **Terrain borné (16x16 cases)** : Entouré de barrières et de tours de guet éclairées par des lanternes.
-- **Zone Nord (`id: 1`)** : Plaine verdoyante avec herbe émeraude, pâquerettes et totem de la table `zones`.
-- **Zone Sud (`id: 2`)** : Rivage cristallin aux nuances bleu azur avec cristaux de quartz.
-- **Rivière centrale & Pontons** : Frontière naturelle matérialisant la séparation des zones.
-- **Soleil directionnel & nuages cubiques** : Ambiance lumineuse et dynamique.
+- **Monde immense étendu (36x100 cases = 3600 cases)** : Un gigantesque terrain d'expérimentation avec une hauteur de construction débloquée jusqu'à **40 blocs** pour ériger des méga-bâtiments, gratte-ciel et châteaux monumentaux.
+- **Zone 1 (`id: 1`) — Zone Nord (Plaine Verdoyante)** : 576 cases d'herbe émeraude, chênes voxel, pâquerettes et totem de données vert.
+- **Rivière 1** : Frontière naturelle avec ponts en bois reliant les Zones 1 et 2.
+- **Zone 2 (`id: 2`) — Zone Sud (Rivage Cristallin)** : 576 cases de sable et cristaux azur, arbres de quartz et totem de données bleu.
+- **Grand Canal Royal 2** : Majestueux cours d'eau avec ponts royaux dorés menant au grand plateau.
+- **Zone 3 (`id: 3`) — Zone Mégalopole (Plateau des Bâtisseurs)** : **4 FOIS PLUS GRANDE (2304 cases !)**, recouverte de dalles de marbre et pierre architecturale avec dorures, obélisques monumentaux et totem de données doré. Idéale pour les grands projets urbains !
+- **Navigation & Téléportation rapide** : Boutons de téléportation directe dans la barre supérieure ou touche **`J`** pour basculer instantanément d'une zone à l'autre.
+- **Soleil directionnel, brume d'horizon & nuages cubiques** : Ambiance lumineuse Minecraft s'étendant à perte de vue.
 
 ---
 
