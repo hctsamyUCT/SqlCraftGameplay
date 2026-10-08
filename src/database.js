@@ -3,9 +3,9 @@ import { GRID_SIZE } from './world.js';
 export class GameDatabase {
   constructor() {
     this.zones = [
-      { id: 1, nom: 'Zone Nord', biome: 'Plaine Verdoyante', sol: 'Herbe Émeraude' },
-      { id: 2, nom: 'Zone Sud', biome: 'Rivage Cristallin', sol: 'Quartz Azur' },
-      { id: 3, nom: 'Zone Mégalopole', biome: 'Plateau des Bâtisseurs (x4)', sol: 'Dalles Dorées & Marbre' }
+      { id: 1, nom: 'Zone Nord', biome: 'Plateau Verdoyant Géant (2304 cases)', sol: 'Herbe Émeraude' },
+      { id: 2, nom: 'Zone Sud', biome: 'Rivage Cristallin Géant (2304 cases)', sol: 'Quartz Azur' },
+      { id: 3, nom: 'Zone Mégalopole', biome: 'Plateau des Bâtisseurs (2304 cases)', sol: 'Dalles Dorées & Marbre' }
     ];
 
     this.blocs = [];
@@ -23,12 +23,12 @@ export class GameDatabase {
   }
 
   // Get zone for a given Z coordinate:
-  // - Z < 18 : Zone 1 (Zone Nord)
-  // - Z >= 18 && Z < 36 : Zone 2 (Zone Sud)
-  // - Z >= 36 : Zone 3 (Zone Mégalopole - 4x plus grande)
+  // - Z < 66 : Zone 1 (Zone Nord - 2304 cases)
+  // - Z >= 66 && Z < 132 : Zone 2 (Zone Sud - 2304 cases)
+  // - Z >= 132 : Zone 3 (Zone Mégalopole - 2304 cases)
   getZoneId(z) {
-    if (z < 18) return 1;
-    if (z < 36) return 2;
+    if (z < 66) return 1;
+    if (z < 132) return 2;
     return 3;
   }
 

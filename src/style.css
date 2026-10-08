@@ -577,20 +577,56 @@ body, html {
 /* Floating Selection Toolbar */
 .selection-toolbar {
   position: absolute;
-  bottom: 120px;
+  bottom: 175px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(15, 23, 42, 0.88);
+  background: rgba(15, 23, 42, 0.95);
   backdrop-filter: blur(14px);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--primary-glow);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 20px var(--primary-glow);
   padding: 10px 14px;
   border-radius: 14px;
-  z-index: 22;
+  z-index: 35;
   display: flex;
   flex-direction: column;
   gap: 8px;
   transition: all 0.2s ease;
+}
+
+/* Quick HUD keyboard hints bar */
+.hud-hints-bar {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 3px 14px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  color: #94a3b8;
+  z-index: 24;
+  pointer-events: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.hud-hints-bar kbd {
+  background: rgba(255, 255, 255, 0.16);
+  color: #38bdf8;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 10px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.hint-sep {
+  color: #475569;
 }
 
 .sel-header {

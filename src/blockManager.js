@@ -66,6 +66,9 @@ export class BlockManager {
 
   // Place a block from user interaction
   placeBlock(type, couleur, targetCoord) {
+    if (!targetCoord || typeof targetCoord.x !== 'number' || typeof targetCoord.y !== 'number' || typeof targetCoord.z !== 'number' || isNaN(targetCoord.x) || isNaN(targetCoord.y) || isNaN(targetCoord.z)) {
+      return null;
+    }
     const { x, y, z } = targetCoord;
 
     // Boundary check (within grid boundaries and height limit up to 40 for mega-buildings)
@@ -179,7 +182,13 @@ export class BlockManager {
       this.targetWireframe.position.copy(obj.position);
       this.targetWireframe.visible = true;
     } else if (obj.userData && obj.userData.isGround) {
-      this.targetWireframe.position.set(obj.userData.gridX, 0, obj.userData.gridZ);
+      const gx = obj.userData.gridX !== undefined
+        ? obj.userData.gridX
+        : Math.max(0, Math.min(GRID_WIDTH - 1, Math.round(intersection.point.x)));
+      const gz = obj.userData.gridZ !== undefined
+        ? obj.userData.gridZ
+        : Math.max(0, Math.min(GRID_DEPTH - 1, Math.round(intersection.point.z)));
+      this.targetWireframe.position.set(gx, 0, gz);
       this.targetWireframe.visible = true;
     } else {
       this.targetWireframe.visible = false;
@@ -200,10 +209,16 @@ export class BlockManager {
         z: Math.round(obj.position.z + normal.z)
       };
     } else if (obj.userData && obj.userData.isGround) {
+      const gx = obj.userData.gridX !== undefined
+        ? obj.userData.gridX
+        : Math.max(0, Math.min(GRID_WIDTH - 1, Math.round(intersection.point.x)));
+      const gz = obj.userData.gridZ !== undefined
+        ? obj.userData.gridZ
+        : Math.max(0, Math.min(GRID_DEPTH - 1, Math.round(intersection.point.z)));
       return {
-        x: obj.userData.gridX,
+        x: gx,
         y: 1, // Place on top of ground (y=0)
-        z: obj.userData.gridZ
+        z: gz
       };
     }
 

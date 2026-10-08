@@ -47,7 +47,8 @@ class SQLCraftGame {
       this.scene,
       this.blockManager,
       this.selectionSystem,
-      this.dataViewer
+      this.dataViewer,
+      this.sqlConsole
     );
 
     // 3. Populate initial starter blocks
@@ -63,21 +64,21 @@ class SQLCraftGame {
 
   // Pre-seed starter blocks across all 3 zones
   spawnStarterBlocks() {
-    // Zone 1 : Nord (Z < 16)
-    this.blockManager.placeBlock('maison', 'rouge', { x: 12, y: 1, z: 7 });
-    this.blockManager.placeBlock('tour', 'bleu', { x: 23, y: 1, z: 7 });
-    this.blockManager.placeBlock('tour', 'bleu', { x: 23, y: 2, z: 7 }); // 2-high tower!
+    // Zone 1 : Nord (Z < 66)
+    this.blockManager.placeBlock('maison', 'rouge', { x: 12, y: 1, z: 20 });
+    this.blockManager.placeBlock('tour', 'bleu', { x: 23, y: 1, z: 20 });
+    this.blockManager.placeBlock('tour', 'bleu', { x: 23, y: 2, z: 20 }); // 2-high tower!
 
-    // Zone 2 : Sud (18 <= Z < 34)
-    this.blockManager.placeBlock('ferme', 'vert', { x: 12, y: 1, z: 24 });
-    this.blockManager.placeBlock('pont', 'jaune', { x: 23, y: 1, z: 24 });
+    // Zone 2 : Sud (66 <= Z < 132)
+    this.blockManager.placeBlock('ferme', 'vert', { x: 12, y: 1, z: 85 });
+    this.blockManager.placeBlock('pont', 'jaune', { x: 23, y: 1, z: 85 });
 
-    // Zone 3 : Mégalopole des Bâtisseurs (Z >= 36) - Espace géant x4
-    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 1, z: 50 });
-    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 2, z: 50 });
-    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 3, z: 50 }); // 3-high skyscraper start!
-    this.blockManager.placeBlock('maison', 'rouge', { x: 14, y: 1, z: 50 });
-    this.blockManager.placeBlock('ferme', 'vert', { x: 20, y: 1, z: 50 });
+    // Zone 3 : Mégalopole des Bâtisseurs (Z >= 132)
+    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 1, z: 150 });
+    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 2, z: 150 });
+    this.blockManager.placeBlock('tour', 'jaune', { x: 17, y: 3, z: 150 }); // 3-high skyscraper start!
+    this.blockManager.placeBlock('maison', 'rouge', { x: 14, y: 1, z: 150 });
+    this.blockManager.placeBlock('ferme', 'vert', { x: 20, y: 1, z: 150 });
   }
 
   initUIBindings() {

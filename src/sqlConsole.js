@@ -130,7 +130,9 @@ export class SQLConsole {
     // Prevent pointer lock capture when typing in terminal
     this.inputEl.addEventListener('keydown', (e) => {
       e.stopPropagation();
-      if (e.key === 'ArrowUp') {
+      if (e.key === 'Escape') {
+        this.inputEl.blur();
+      } else if (e.key === 'ArrowUp') {
         if (this.historyIndex > 0) {
           this.historyIndex--;
           this.inputEl.value = this.history[this.historyIndex] || '';
@@ -152,6 +154,21 @@ export class SQLConsole {
         document.exitPointerLock();
       }
     });
+  }
+
+  // Open and focus input directly (called from Enter or Slash shortcut)
+  focusInput() {
+    if (this.isMinimized) {
+      this.isMinimized = false;
+      this.container.classList.remove('minimized');
+      const toggleBtn = document.getElementById('btn-toggle-console');
+      if (toggleBtn) toggleBtn.textContent = '➖';
+    }
+    if (document.exitPointerLock) {
+      document.exitPointerLock();
+    }
+    this.inputEl.focus();
+    this.inputEl.select();
   }
 
   showWelcome() {

@@ -5,13 +5,14 @@ import { sound } from './sound.js';
 import { GRID_WIDTH, GRID_DEPTH } from './world.js';
 
 export class PlayerController {
-  constructor(camera, domElement, scene, blockManager, selectionSystem, dataViewer) {
+  constructor(camera, domElement, scene, blockManager, selectionSystem, dataViewer, sqlConsole) {
     this.camera = camera;
     this.domElement = domElement;
     this.scene = scene;
     this.blockManager = blockManager;
     this.selectionSystem = selectionSystem;
     this.dataViewer = dataViewer;
+    this.sqlConsole = sqlConsole;
 
     this.controls = new PointerLockControls(camera, document.body);
 
@@ -63,9 +64,14 @@ export class PlayerController {
     });
 
     this.controls.addEventListener('unlock', () => {
-      // Only show overlay if data viewer is not open
-      if (overlay && !this.dataViewer.isOpen) {
-        overlay.classList.remove('hidden');
+      // Do not re-open overlay on unlock.
+      // Unlocking pointer lock allows the user to interact with UI windows (BDD, Missions, SQL input).
+    });
+
+    // Re-lock pointer controls when clicking back onto the 3D game canvas
+    this.domElement.addEventListener('click', () => {
+      if (!this.controls.isLocked && (!overlay || overlay.classList.contains('hidden'))) {
+        this.controls.lock();
       }
     });
 
@@ -138,6 +144,39 @@ export class PlayerController {
         // Toggle Table Viewer (Key T)
         case 'KeyT':
           this.dataViewer.toggle();
+          break;
+
+        // Toggle Missions (Key M)
+        case 'KeyM': {
+          const btnCollapse = document.getElementById('btn-collapse-quests');
+          if (btnCollapse) btnCollapse.click();
+          break;
+        }
+
+        // Focus SQL Console (Enter or Slash)
+        case 'Enter':
+        case 'NumpadEnter':
+        case 'Slash': {
+          event.preventDefault();
+          if (this.controls.isLocked) {
+            this.controls.unlock();
+          }
+          if (this.sqlConsole) {
+            this.sqlConsole.focusInput();
+          } else {
+            const sqlInput = document.getElementById('console-sql-input');
+            if (sqlInput) {
+              sqlInput.focus();
+              sqlInput.select();
+            }
+          }
+          break;
+        }
+
+        // Free / Capture Mouse Cursor (Tab)
+        case 'Tab':
+          event.preventDefault();
+          this.toggleMouseCursor();
           break;
 
         // Cycle Teleport between Zones (Key J)
@@ -221,13 +260,22 @@ export class PlayerController {
 
     // Bind zone teleport buttons
     const tp1 = document.getElementById('tp-zone-1');
-    if (tp1) tp1.onclick = () => this.teleportToZone(1);
+    if (tp1) tp1.onclick = (e) => {
+      e.stopPropagation();
+      this.teleportToZone(1);
+    };
 
     const tp2 = document.getElementById('tp-zone-2');
-    if (tp2) tp2.onclick = () => this.teleportToZone(2);
+    if (tp2) tp2.onclick = (e) => {
+      e.stopPropagation();
+      this.teleportToZone(2);
+    };
 
     const tp3 = document.getElementById('tp-zone-3');
-    if (tp3) tp3.onclick = () => this.teleportToZone(3);
+    if (tp3) tp3.onclick = (e) => {
+      e.stopPropagation();
+      this.teleportToZone(3);
+    };
 
     this.updateHUD();
   }
@@ -237,9 +285,11 @@ export class PlayerController {
     sound.playSelect();
     this.updateHUD();
 
-    // If slot 7 (Loupe), show selection toolbar
+    // If slot 7 (Loupe), show selection toolbar; otherwise hide it so color palette is never blocked!
     if (this.activeSlot === 7) {
       this.selectionSystem.showToolbar(true);
+    } else {
+      this.selectionSystem.showToolbar(false);
     }
   }
 
@@ -325,30 +375,38 @@ export class PlayerController {
     }
   }
 
+  toggleMouseCursor() {
+    if (this.controls.isLocked) {
+      this.controls.unlock();
+      this.selectionSystem.flashNotice("🖱️ Souris libre : clique sur l'interface (Missions, BDD...). Clic sur l'écran ou [Tab] pour rejouer.");
+    } else {
+      this.controls.lock();
+    }
+  }
+
   teleportToZone(zoneId) {
     const centerX = GRID_WIDTH / 2 - 0.5;
     this.velocity.set(0, 0, 0);
+    this.camera.rotation.x = 0;
+    this.camera.rotation.z = 0;
     if (zoneId === 1) {
-      this.camera.position.set(centerX, 2.6, 5.0);
-      this.camera.lookAt(centerX, 1.5, 20.0);
-      this.selectionSystem.flashNotice("📍 Téléporté en Zone 1 : Plaine Verdoyante");
+      this.camera.position.set(centerX, 2.6, 12.0);
+      this.selectionSystem.flashNotice("📍 Téléporté en Zone 1 : Plaine Verdoyante (2304 cases)");
     } else if (zoneId === 2) {
-      this.camera.position.set(centerX, 2.6, 22.0);
-      this.camera.lookAt(centerX, 1.5, 36.0);
-      this.selectionSystem.flashNotice("📍 Téléporté en Zone 2 : Rivage Cristallin");
+      this.camera.position.set(centerX, 2.6, 78.0);
+      this.selectionSystem.flashNotice("📍 Téléporté en Zone 2 : Rivage Cristallin (2304 cases)");
     } else if (zoneId === 3) {
-      this.camera.position.set(centerX, 2.6, 42.0);
-      this.camera.lookAt(centerX, 1.5, 80.0);
-      this.selectionSystem.flashNotice("⭐ Téléporté en Zone 3 : Mégalopole (x4 d'espace) !");
+      this.camera.position.set(centerX, 2.6, 144.0);
+      this.selectionSystem.flashNotice("⭐ Téléporté en Zone 3 : Mégalopole (2304 cases)");
     }
     sound.playSelect();
   }
 
   cycleZoneTeleport() {
     const currentZ = this.camera.position.z;
-    if (currentZ < 18) {
+    if (currentZ < 66) {
       this.teleportToZone(2);
-    } else if (currentZ < 36) {
+    } else if (currentZ < 132) {
       this.teleportToZone(3);
     } else {
       this.teleportToZone(1);
