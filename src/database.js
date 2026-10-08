@@ -105,14 +105,24 @@ export class GameDatabase {
   selectBlocks(ids) {
     if (!ids || ids.length === 0) {
       const query = `SELECT * FROM blocs;`;
-      const explanation = `📋 SELECT * : Tu lis toutes les lignes de la table 'blocs' sans filtre ! [CRUD : Read]`;
+      const explanation = `📋 SELECT * FROM blocs :\nTu lis toutes les lignes de la table 'blocs' sans filtre (${this.blocs.length} bloc${this.blocs.length > 1 ? 's' : ''}) ! [CRUD : Read]`;
       this.emitQuery({ query, op: 'SELECT', explanation, results: [...this.blocs] });
       return [...this.blocs];
     }
 
     const results = this.blocs.filter(b => ids.includes(b.id));
-    const query = `SELECT * FROM blocs\nWHERE id IN (${ids.join(', ')});`;
-    const explanation = `📋 SELECT : Tu récupères uniquement les lignes dont l'id fait partie de la sélection (${ids.length} bloc${ids.length > 1 ? 's' : ''}) ! [CRUD : Read]`;
+    let query, explanation;
+
+    if (ids.length === 1) {
+      const target = results[0];
+      query = `SELECT * FROM blocs\nWHERE id = ${ids[0]};`;
+      explanation = target
+        ? `📋 SELECT ... WHERE id = ${ids[0]} :\nTu cibles précisément le bloc #${ids[0]} (type: '${target.type}', couleur: '${target.couleur}', zone: ${target.zone_id}) via sa clé primaire ! [CRUD : Read]`
+        : `📋 SELECT ... WHERE id = ${ids[0]} :\nRecherche de la ligne ayant la clé primaire id = ${ids[0]}.`;
+    } else {
+      query = `SELECT * FROM blocs\nWHERE id IN (${ids.join(', ')});`;
+      explanation = `📋 SELECT ... WHERE id IN (...) :\nTu récupères simultanément ${ids.length} lignes correspondant aux blocs ciblés avec la loupe ! [CRUD : Read]`;
+    }
 
     this.emitQuery({
       query,
@@ -125,10 +135,19 @@ export class GameDatabase {
   }
 
   // Filter blocks by field (type or couleur)
-  filterBlocks(field, value) {
+  filterBlocks(field, value, subsetIds = null) {
+    if (subsetIds && subsetIds.length > 0) {
+      const baseList = this.blocs.filter(b => subsetIds.includes(b.id));
+      const results = baseList.filter(b => String(b[field]).toLowerCase() === String(value).toLowerCase());
+      const query = `SELECT * FROM blocs\nWHERE ${field} = '${value}' AND id IN (${subsetIds.join(', ')});`;
+      const explanation = `🔍 WHERE ${field} = '${value}' AND id IN (...) :\nTu filtres ta sélection : ${results.length} bloc${results.length > 1 ? 's' : ''} conservé${results.length > 1 ? 's' : ''} sur ${subsetIds.length} ciblés !`;
+      this.emitQuery({ query, op: 'SELECT_FILTER', explanation, results });
+      return results;
+    }
+
     const results = this.blocs.filter(b => String(b[field]).toLowerCase() === String(value).toLowerCase());
     const query = `SELECT * FROM blocs\nWHERE ${field} = '${value}';`;
-    const explanation = `🔍 WHERE ${field} = '${value}' : Tu appliques un filtre SQL pour ne retenir que les blocs correspondants (${results.length} trouvé${results.length > 1 ? 's' : ''}) !`;
+    const explanation = `🔍 WHERE ${field} = '${value}' :\nFiltre sur tout le monde : ${results.length} bloc${results.length > 1 ? 's' : ''} trouvé${results.length > 1 ? 's' : ''} !`;
 
     this.emitQuery({
       query,
@@ -141,8 +160,12 @@ export class GameDatabase {
   }
 
   // Order blocks
-  orderBlocks(field, direction = 'ASC') {
-    const sorted = [...this.blocs].sort((a, b) => {
+  orderBlocks(field, direction = 'ASC', subsetIds = null) {
+    const listToSort = (subsetIds && subsetIds.length > 0)
+      ? this.blocs.filter(b => subsetIds.includes(b.id))
+      : [...this.blocs];
+
+    const sorted = [...listToSort].sort((a, b) => {
       if (direction === 'ASC') {
         return a[field] > b[field] ? 1 : -1;
       } else {
@@ -150,8 +173,14 @@ export class GameDatabase {
       }
     });
 
-    const query = `SELECT * FROM blocs\nORDER BY ${field} ${direction};`;
-    const explanation = `↕️ ORDER BY ${field} ${direction} : Tu classes les lignes de la table par ordre ${direction === 'ASC' ? 'croissant' : 'décroissant'} selon la colonne '${field}' !`;
+    let query, explanation;
+    if (subsetIds && subsetIds.length > 0) {
+      query = `SELECT * FROM blocs\nWHERE id IN (${subsetIds.join(', ')})\nORDER BY ${field} ${direction};`;
+      explanation = `↕️ ORDER BY ${field} ${direction} :\nTu classes les ${sorted.length} blocs de ta sélection par ordre ${direction === 'ASC' ? 'croissant' : 'décroissant'} selon '${field}' !`;
+    } else {
+      query = `SELECT * FROM blocs\nORDER BY ${field} ${direction};`;
+      explanation = `↕️ ORDER BY ${field} ${direction} :\nTu classes tous les blocs du monde par ordre ${direction === 'ASC' ? 'croissant' : 'décroissant'} selon la colonne '${field}' !`;
+    }
 
     this.emitQuery({
       query,

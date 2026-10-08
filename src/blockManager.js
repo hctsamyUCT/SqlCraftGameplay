@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { getBlockTexture, COLOR_MAP } from './textures.js';
+import { getBlockTexture, getBlockMaterials, COLOR_MAP } from './textures.js';
 import { sound } from './sound.js';
 import { GRID_WIDTH, GRID_DEPTH } from './world.js';
 
@@ -29,13 +29,8 @@ export class BlockManager {
 
   // Create 3D Mesh for a block
   createMesh(blockData) {
-    const tex = getBlockTexture(blockData.type, blockData.couleur);
-    const mat = new THREE.MeshLambertMaterial({
-      map: tex,
-      color: 0xffffff
-    });
-
-    const mesh = new THREE.Mesh(this.boxGeo, mat);
+    const materials = getBlockMaterials(blockData.type, blockData.couleur);
+    const mesh = new THREE.Mesh(this.boxGeo, materials);
     mesh.position.set(blockData.x, blockData.y, blockData.z);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -98,9 +93,13 @@ export class BlockManager {
     if (!updated) return null;
 
     // Update material texture
-    const newTex = getBlockTexture(updated.type, newColor);
-    mesh.material.map = newTex;
-    mesh.material.needsUpdate = true;
+    const newMaterials = getBlockMaterials(updated.type, newColor);
+    mesh.material = newMaterials;
+    if (Array.isArray(mesh.material)) {
+      mesh.material.forEach(m => { m.needsUpdate = true; });
+    } else {
+      mesh.material.needsUpdate = true;
+    }
     mesh.userData.couleur = newColor;
 
     // Quick bounce animation
@@ -128,7 +127,11 @@ export class BlockManager {
     this.spawnBreakParticles(mesh.position, deleted.couleur);
 
     this.scene.remove(mesh);
-    if (mesh.material) mesh.material.dispose();
+    if (Array.isArray(mesh.material)) {
+      mesh.material.forEach(m => m.dispose());
+    } else if (mesh.material) {
+      mesh.material.dispose();
+    }
     this.blockMeshes.delete(id);
 
     // Hide wireframe if it was on this block

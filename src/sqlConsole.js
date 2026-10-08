@@ -34,6 +34,7 @@ export class SQLConsole {
           <span class="db-status-badge">BDD ACTIVE</span>
         </div>
         <div class="console-controls">
+          <button id="btn-ghost-console" class="icon-btn" title="Activer / Désactiver la transparence (voir à travers)">👁️</button>
           <button id="btn-copy-query" class="icon-btn" title="Copier la dernière requête">📋</button>
           <button id="btn-clear-console" class="icon-btn" title="Vider la console">🧹</button>
           <button id="btn-toggle-console" class="icon-btn" title="Réduire/Agrandir">➖</button>
@@ -69,6 +70,16 @@ export class SQLConsole {
     this.db.onQuery(payload => {
       this.addQueryEntry(payload);
     });
+
+    // Ghost mode (transparency toggle so blocks behind are visible)
+    const ghostBtn = document.getElementById('btn-ghost-console');
+    if (ghostBtn) {
+      ghostBtn.onclick = () => {
+        const isGhost = this.container.classList.toggle('ghost-mode');
+        ghostBtn.style.color = isGhost ? '#38bdf8' : '';
+        this.showToastNotice(isGhost ? "👁️ Console ultra-transparente activée (tu peux voir le monde à travers) !" : "👁️ Transparence normale réactivée.");
+      };
+    }
 
     // Minimize toggle
     const toggleBtn = document.getElementById('btn-toggle-console');
@@ -187,8 +198,18 @@ export class SQLConsole {
     this.feedEl.innerHTML = welcomeHtml;
   }
 
+  unminimize() {
+    if (this.isMinimized) {
+      this.isMinimized = false;
+      this.container.classList.remove('minimized');
+      const toggleBtn = document.getElementById('btn-toggle-console');
+      if (toggleBtn) toggleBtn.textContent = '➖';
+    }
+  }
+
   addQueryEntry({ query, op, explanation, results, count }) {
     this.lastQuery = query;
+    this.unminimize();
     sound.playSqlPulse();
 
     const entry = document.createElement('div');
