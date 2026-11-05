@@ -548,6 +548,35 @@ export class GameWorld {
         const interLine = new THREE.Line(geo, mat);
         this.joinLinesGroup.add(interLine);
       }
+
+      // Relier DIRECTEMENT les blocs de zones différentes entre eux par un laser éclatant
+      for (let i = 0; i < blocks.length; i++) {
+        for (let j = i + 1; j < blocks.length; j++) {
+          const b1 = blocks[i];
+          const b2 = blocks[j];
+          if (b1.zone_id !== b2.zone_id) {
+            const p1 = new THREE.Vector3(b1.x, b1.y + 0.6, b1.z);
+            const p2 = new THREE.Vector3(b2.x, b2.y + 0.6, b2.z);
+            const mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+            const dist = p1.distanceTo(p2);
+            mid.y += Math.min(18, Math.max(4, dist * 0.12));
+
+            const curve = new THREE.QuadraticBezierCurve3(p1, mid, p2);
+            const points = curve.getPoints(48);
+            const geo = new THREE.BufferGeometry().setFromPoints(points);
+
+            const mat = new THREE.LineBasicMaterial({
+              color: 0xc084fc, // Violet néon relationnel
+              linewidth: 5,
+              transparent: true,
+              opacity: 1.0
+            });
+
+            const blockDirectLine = new THREE.Line(geo, mat);
+            this.joinLinesGroup.add(blockDirectLine);
+          }
+        }
+      }
     }
   }
 

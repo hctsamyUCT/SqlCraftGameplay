@@ -44,7 +44,7 @@ export class QuestSystem {
       {
         id: 'join',
         title: "5. L'Architecte Données (JOIN)",
-        desc: 'Pose des blocs dans au moins 2 zones différentes, puis clique sur Relier',
+        desc: 'Relie 2 blocs de 2 zones différentes (Outil 7 Relier ou Touche R)',
         target: 1,
         current: 0,
         done: false,

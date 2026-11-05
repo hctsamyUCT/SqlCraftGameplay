@@ -1,0 +1,28 @@
+const {chromium}=require('C:/Program Files/WindowsApps/OpenAI.CodexPrimaryRuntime.v26-1030-493-0_26.1030.493.0_x64__3k8sg7r9htsxt/dependencies/node/node_modules/playwright');
+(async()=>{
+const browser=await chromium.launch({headless:true});
+const page=await browser.newPage({viewport:{width:760,height:900},reducedMotion:'reduce'});
+const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.goto('file:///C:/Users/hp/.codex/visualizations/2026/11/04/01a1a6ad-7a88-7932-a878-c4c90f1beafb/sql-craft.html');
+await page.getByRole('button',{name:'Q ←',exact:true}).click();
+if(await page.locator('.sc-move-result').textContent()!=='Aller à gauche')throw new Error('Movement guide failed');
+await page.screenshot({path:'D:/Hub/game/.codex-build/sql-craft/guide-web-3.png',fullPage:true});
+await page.getByRole('button',{name:'Slide suivante'}).click();
+await page.locator('[data-tool="4"]').click();
+if(!(await page.locator('.sc-tool-result').textContent()).includes('repeins-le'))throw new Error('Tool guide failed');
+await page.screenshot({path:'D:/Hub/game/.codex-build/sql-craft/guide-web-4.png',fullPage:true});
+await page.setViewportSize({width:360,height:1100});
+await page.screenshot({path:'D:/Hub/game/.codex-build/sql-craft/guide-web-mobile.png',fullPage:true});
+if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw new Error('Mobile guide overflow');
+await page.getByRole('button',{name:'Slide précédente'}).click();
+await page.getByRole('button',{name:'Slide précédente'}).click();
+await page.getByRole('button',{name:'Sélectionner la ligne 8',exact:true}).click();
+if(await page.locator('.sc-sql').textContent()!=='SELECT * FROM blocs WHERE id = 8;')throw new Error('Selection failed');
+if(await page.locator('[data-row="8"]').getAttribute('class')!=='sc-selected')throw new Error('Row failed');
+await page.screenshot({path:'D:/Hub/game/.codex-build/sql-craft/interactive-desktop.png',fullPage:true});
+await page.setViewportSize({width:360,height:1100});
+await page.screenshot({path:'D:/Hub/game/.codex-build/sql-craft/interactive-mobile.png',fullPage:true});
+const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
+console.log(JSON.stringify({errors,overflow,selection:'bloc 8, zone 1'}));
+await browser.close();
+})().catch(e=>{console.error(e);process.exitCode=1});

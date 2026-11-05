@@ -126,6 +126,7 @@ export class DataViewer {
     }
 
     let rowsHtml = '';
+    const zoneLabels = { 1: 'Nord', 2: 'Sud', 3: 'Mégalopole' };
     this.db.blocs.forEach(b => {
       const isSelected = this.selectionSystem.selectedIds.has(b.id);
       rowsHtml += `
@@ -136,14 +137,23 @@ export class DataViewer {
           <td><code>${b.x}</code></td>
           <td><code>${b.y}</code></td>
           <td><code>${b.z}</code></td>
-          <td class="col-fk"><code>${b.zone_id}</code> (${b.zone_id === 1 ? 'Nord' : 'Sud'})</td>
+          <td class="col-fk"><code>${b.zone_id}</code> (${zoneLabels[b.zone_id] || 'Autre'})</td>
         </tr>
       `;
     });
 
+    const selCount = this.selectionSystem.selectedIds.size;
     container.innerHTML = `
       <div class="table-info-banner">
-        Schéma : <code>blocs(id PK, type VARCHAR, couleur VARCHAR, x INT, y INT, z INT, zone_id INT FK)</code>
+        <div>Schéma : <code>blocs(id PK, type VARCHAR, couleur VARCHAR, x INT, y INT, z INT, zone_id INT FK)</code></div>
+        <div class="dataviewer-quick-actions">
+          <button id="btn-viewer-auto-join" class="btn-primary" title="Relier automatiquement 1 bloc du Nord et 1 bloc du Sud">
+            ⚡ Relier 2 blocs Nord + Sud (JOIN)
+          </button>
+          <button id="btn-viewer-join-selected" class="btn-action btn-join" title="Relier les blocs actuellement sélectionnés dans la table">
+            🔗 Relier la sélection (${selCount} bloc${selCount > 1 ? 's' : ''})
+          </button>
+        </div>
       </div>
       <table class="db-table">
         <thead>
@@ -171,6 +181,32 @@ export class DataViewer {
         this.renderBlocsTable(container);
       };
     });
+
+    // Auto-join button
+    const btnAutoJoin = document.getElementById('btn-viewer-auto-join');
+    if (btnAutoJoin) {
+      btnAutoJoin.onclick = () => {
+        this.selectionSystem.autoLinkAcrossZones();
+        this.activeTab = 'join';
+        this.modalEl.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-tab') === 'join');
+        });
+        this.renderContent();
+      };
+    }
+
+    // Join selected button
+    const btnJoinSel = document.getElementById('btn-viewer-join-selected');
+    if (btnJoinSel) {
+      btnJoinSel.onclick = () => {
+        this.selectionSystem.triggerQuickJoin();
+        this.activeTab = 'join';
+        this.modalEl.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-tab') === 'join');
+        });
+        this.renderContent();
+      };
+    }
   }
 
   renderZonesTable(container) {

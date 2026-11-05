@@ -113,24 +113,40 @@ export class PlayerController {
           this.isSprinting = true;
           break;
 
-        // Hotbar shortcuts (1 to 6)
+        // Hotbar shortcuts (1 to 7) - Digit & Numpad support
         case 'Digit1':
+        case 'Numpad1':
           this.setSlot(1);
           break;
         case 'Digit2':
+        case 'Numpad2':
           this.setSlot(2);
           break;
         case 'Digit3':
+        case 'Numpad3':
           this.setSlot(3);
           break;
         case 'Digit4':
+        case 'Numpad4':
           this.setSlot(4);
           break;
         case 'Digit5':
+        case 'Numpad5':
           this.setSlot(5);
           break;
         case 'Digit6':
+        case 'Numpad6':
           this.setSlot(6);
+          break;
+        case 'Digit7':
+        case 'Numpad7':
+          this.setSlot(7);
+          break;
+
+        // Quick Relier / JOIN (Key R)
+        case 'KeyR':
+          event.preventDefault();
+          this.selectionSystem.triggerQuickJoin();
           break;
 
         // Cycle Color (Key C)
@@ -218,11 +234,11 @@ export class PlayerController {
       if (!this.controls.isLocked) return;
       if (e.deltaY > 0) {
         let next = this.activeSlot + 1;
-        if (next > 6) next = 1;
+        if (next > 7) next = 1;
         this.setSlot(next);
       } else {
         let prev = this.activeSlot - 1;
-        if (prev < 1) prev = 6;
+        if (prev < 1) prev = 7;
         this.setSlot(prev);
       }
     }, { passive: true });
@@ -282,10 +298,17 @@ export class PlayerController {
     sound.playSelect();
     this.updateHUD();
 
-    // If slot 6 (Loupe), show selection toolbar; otherwise hide it
-    if (this.activeSlot === 6) {
+    // If slot 7 (Relier), activate dedicated link tool HUD
+    if (this.activeSlot === 7) {
+      this.selectionSystem.activateLinkTool(true);
+      this.selectionSystem.showToolbar(false);
+    }
+    // If slot 6 (Loupe), show selection toolbar
+    else if (this.activeSlot === 6) {
+      this.selectionSystem.activateLinkTool(false);
       this.selectionSystem.showToolbar(true);
     } else {
+      this.selectionSystem.activateLinkTool(false);
       this.selectionSystem.showToolbar(false);
     }
   }
@@ -376,6 +399,14 @@ export class PlayerController {
         this.selectionSystem.toggleBlockSelection(obj.userData.id);
       }
     }
+    // Slot 7: Relier (JOIN relationnel)
+    else if (this.activeSlot === 7) {
+      if (obj.userData && obj.userData.isBlock) {
+        this.selectionSystem.handleLinkToolClick(obj.userData.id);
+      } else {
+        this.selectionSystem.flashNotice("💡 Vise un bloc avec ton réticule et fais un clic gauche pour le relier !");
+      }
+    }
   }
 
   toggleMouseCursor() {
@@ -394,15 +425,16 @@ export class PlayerController {
     this.camera.rotation.z = 0;
     if (zoneId === 1) {
       this.camera.position.set(centerX, 2.6, 12.0);
-      this.selectionSystem.flashNotice("📍 Téléporté en Zone 1 : Plaine Verdoyante (2304 cases)");
+      this.selectionSystem.flashNotice("📍 Téléporté en Zone 1 : Plaine Verdoyante (Nord)");
     } else if (zoneId === 2) {
       this.camera.position.set(centerX, 2.6, 78.0);
-      this.selectionSystem.flashNotice("📍 Téléporté en Zone 2 : Rivage Cristallin (2304 cases)");
+      this.selectionSystem.flashNotice("📍 Téléporté en Zone 2 : Rivage Cristallin (Sud)");
     } else if (zoneId === 3) {
       this.camera.position.set(centerX, 2.6, 144.0);
-      this.selectionSystem.flashNotice("⭐ Téléporté en Zone 3 : Mégalopole (2304 cases)");
+      this.selectionSystem.flashNotice("⭐ Téléporté en Zone 3 : Mégalopole");
     }
     sound.playSelect();
+    this.updateZoneHUD();
   }
 
   cycleZoneTeleport() {
@@ -483,5 +515,28 @@ export class PlayerController {
       this.camera.position.x = Math.max(-0.2, Math.min(GRID_WIDTH - 0.8, this.camera.position.x));
       this.camera.position.z = Math.max(-0.2, Math.min(GRID_DEPTH - 0.8, this.camera.position.z));
     }
+
+    // Always update current zone in header and nav
+    this.updateZoneHUD();
+  }
+
+  updateZoneHUD() {
+    const z = this.camera.position.z;
+    const currentZone = z < 66 ? 1 : z < 132 ? 2 : 3;
+
+    const badge = document.getElementById('current-zone-badge');
+    if (badge) {
+      const names = { 1: '📍 Zone 1 (Nord)', 2: '📍 Zone 2 (Sud)', 3: '⭐ Zone 3 (Mégalopole)' };
+      badge.textContent = names[currentZone] || '📍 Zone 1';
+      badge.className = `current-zone-badge zone-${currentZone}`;
+    }
+
+    // Highlight active TP button in top nav
+    const tp1 = document.getElementById('tp-zone-1');
+    const tp2 = document.getElementById('tp-zone-2');
+    const tp3 = document.getElementById('tp-zone-3');
+    if (tp1) tp1.classList.toggle('active-zone-nav', currentZone === 1);
+    if (tp2) tp2.classList.toggle('active-zone-nav', currentZone === 2);
+    if (tp3) tp3.classList.toggle('active-zone-nav', currentZone === 3);
   }
 }

@@ -108,18 +108,6 @@ class SQLCraftGame {
         if (soundLabel) soundLabel.textContent = isMuted ? 'Son OFF' : 'Son ON';
       };
     }
-
-    // Top-Nav: Help / Controls guide
-    const helpBtn = document.getElementById('nav-btn-help');
-    const overlay = document.getElementById('instructions-overlay');
-    if (helpBtn && overlay) {
-      helpBtn.onclick = () => {
-        if (document.exitPointerLock) {
-          document.exitPointerLock();
-        }
-        overlay.classList.remove('hidden');
-      };
-    }
   }
 
   animate() {

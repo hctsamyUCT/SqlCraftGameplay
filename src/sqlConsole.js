@@ -11,6 +11,7 @@ export class SQLConsole {
     this.isMinimized = false;
 
     this.initUI();
+    this.initDraggable();
     this.bindEvents();
     this.showWelcome();
   }
@@ -26,8 +27,9 @@ export class SQLConsole {
     this.container = el;
 
     this.container.innerHTML = `
-      <div class="console-header">
+      <div class="console-header" id="console-drag-header" title="Déplacer la console : clique et glisse n'importe où sur l'écran (avec Tab pour libérer la souris)">
         <div class="console-title">
+          <span class="drag-handle" title="Cliquer et glisser pour déplacer">⋮⋮</span>
           <span class="status-dot"></span>
           <span class="terminal-icon">⚡</span>
           <strong>CONSOLE SQL</strong>
@@ -63,6 +65,85 @@ export class SQLConsole {
 
     this.feedEl = document.getElementById('console-feed');
     this.inputEl = document.getElementById('console-sql-input');
+  }
+
+  // Smooth dragging of the SQL Console anywhere on screen
+  initDraggable() {
+    const header = document.getElementById('console-drag-header');
+    if (!header || !this.container) return;
+
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let initialLeft = 0;
+    let initialTop = 0;
+
+    const onMouseDown = (e) => {
+      // Don't drag if clicking buttons
+      if (e.target.closest('.console-controls') || e.target.closest('button')) {
+        return;
+      }
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+
+      const rect = this.container.getBoundingClientRect();
+      initialLeft = rect.left;
+      initialTop = rect.top;
+
+      this.container.classList.add('is-dragging');
+      document.body.classList.add('body-dragging');
+
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+    };
+
+    const onMouseMove = (moveEvent) => {
+      if (!isDragging) return;
+      moveEvent.preventDefault();
+
+      const dx = moveEvent.clientX - startX;
+      const dy = moveEvent.clientY - startY;
+
+      let newLeft = initialLeft + dx;
+      let newTop = initialTop + dy;
+
+      const pad = 10;
+      const maxLeft = window.innerWidth - this.container.offsetWidth - pad;
+      const maxTop = window.innerHeight - 50;
+
+      newLeft = Math.max(pad, Math.min(maxLeft, newLeft));
+      newTop = Math.max(pad, Math.min(maxTop, newTop));
+
+      this.container.style.left = `${newLeft}px`;
+      this.container.style.top = `${newTop}px`;
+      this.container.style.right = 'auto';
+      this.container.style.bottom = 'auto';
+    };
+
+    const onMouseUp = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      this.container.classList.remove('is-dragging');
+      document.body.classList.remove('body-dragging');
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+
+    header.addEventListener('mousedown', onMouseDown);
+
+    // Keep within bounds on window resize
+    window.addEventListener('resize', () => {
+      if (this.container.style.left && this.container.style.left !== 'auto') {
+        const rect = this.container.getBoundingClientRect();
+        const maxLeft = window.innerWidth - this.container.offsetWidth - 10;
+        const maxTop = window.innerHeight - 50;
+        let curLeft = parseFloat(this.container.style.left) || rect.left;
+        let curTop = parseFloat(this.container.style.top) || rect.top;
+        if (curLeft > maxLeft) this.container.style.left = `${Math.max(10, maxLeft)}px`;
+        if (curTop > maxTop) this.container.style.top = `${Math.max(10, maxTop)}px`;
+      }
+    });
   }
 
   bindEvents() {

@@ -22,6 +22,7 @@
       <button id="tp-zone-1" class="btn-zone-tp" title="Téléportation Zone Nord (1)">🟢 Nord</button>
       <button id="tp-zone-2" class="btn-zone-tp" title="Téléportation Zone Sud (2)">🔵 Sud</button>
       <button id="tp-zone-3" class="btn-zone-tp btn-zone-3" title="Téléportation Zone Mégalopole (4x plus grande !)">⭐ Mégalopole (x4)</button>
+      <span id="current-zone-badge" class="current-zone-badge" title="Zone où se trouve actuellement votre personnage">📍 Zone Nord</span>
     </div>
 
     <button id="nav-btn-table" class="nav-pill-btn" title="Ouvrir la table SQL (Touche T)">
@@ -32,10 +33,6 @@
     <button id="nav-btn-sound" class="nav-pill-btn" title="Activer / Couper le son">
       <span id="sound-icon">🔊</span>
       <span id="sound-label">Son ON</span>
-    </button>
-    <button id="nav-btn-help" class="nav-pill-btn" title="Guide des commandes">
-      <span>❓</span>
-      <span>Aide</span>
     </button>
   </header>
 
@@ -52,7 +49,7 @@
       <span style="font-size: 10px; color: var(--text-muted);">(Touche C)</span>
     </div>
 
-    <!-- Hotbar Slots 1 to 6 -->
+    <!-- Hotbar Slots 1 to 7 -->
     <div class="minecraft-hotbar">
       <div class="hotbar-slot active" data-slot="1" title="Poser du Béton (INSERT)">
         <span class="slot-number">1</span>
@@ -79,10 +76,15 @@
         <span class="slot-icon">🪓</span>
         <span class="slot-label">Hache</span>
       </div>
-      <div class="hotbar-slot" data-slot="6" title="Sélectionner &amp; Requêter avec la Loupe (SELECT / JOIN)">
+      <div class="hotbar-slot" data-slot="6" title="Sélectionner &amp; Requêter avec la Loupe (SELECT)">
         <span class="slot-number">6</span>
         <span class="slot-icon">🔍</span>
         <span class="slot-label">Loupe</span>
+      </div>
+      <div class="hotbar-slot slot-join" data-slot="7" title="Relier 2 blocs de zones différentes (JOIN relationnel) [Touche 7 ou R]">
+        <span class="slot-number">7</span>
+        <span class="slot-icon">🔗</span>
+        <span class="slot-label">Relier</span>
       </div>
     </div>
   </div>
@@ -112,7 +114,7 @@
           <span class="guide-icon">🔢</span>
           <div>
             <div class="guide-title">Hotbar &amp; Outils</div>
-            <div class="guide-desc">Touches 1 à 6 ou Molette de la souris • Touche C pour changer de couleur</div>
+            <div class="guide-desc">Touches 1 à 7 ou Molette • Touche 7 ou R pour Relier (JOIN) • Touche C pour couleur</div>
           </div>
         </div>
         <div class="guide-card">

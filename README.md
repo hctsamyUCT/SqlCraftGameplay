@@ -32,10 +32,12 @@ En **BUT Science des Données**, la manipulation des données est au cœur de to
 - **Grand Canal Royal 2** : Majestueux cours d'eau avec 3 ponts royaux dorés reliant les Zones 2 et 3.
 - **Zone 3 (`id: 3`) — Zone Mégalopole (Plateau des Bâtisseurs)** : **2 304 cases** recouvertes de dalles de marbre et pierre architecturale avec dorures, obélisques monumentaux et totem de données doré.
 - **Ergonomie & Raccourcis Clavier fluides** :
-  - **`Tab`** : Libérer / capturer la souris pour cliquer librement sur l'interface (réduire les fenêtres, cliquer sur les boutons BDD/Aide/Couleurs).
+  - **`Tab`** : Libérer / capturer la souris pour cliquer librement sur l'interface, déplacer la console SQL n'importe où sur l'écran et inspecter la base de données.
   - **`Entrée`** ou **`/`** : Ouvrir et taper directement une commande SQL dans la console interactive, puis valider avec Entrée.
   - **`M`** : Réduire ou agrandir instantanément le volet des Missions BUT SD.
   - **`J`** ou boutons d'en-tête : Téléportation rapide instantanée entre les Zones 1, 2 et 3.
+  - **`R`** : Déclencher directement la jointure relationnelle (JOIN) sur 2 blocs de zones différentes.
+  - **`7`** : Activer l'outil dédié **Relier** avec guide interactif pas-à-pas et balises 3D.
   - **`C`** : Changer de couleur de bloc / peinture.
   - **`T`** : Ouvrir l'explorateur relationnel de tables.
 
@@ -52,12 +54,10 @@ Chaque action dans l'univers de jeu met immédiatement à jour une base de donn�
 | **3** | 🌿 **Plante** | Clic pour poser | `INSERT INTO blocs (...) VALUES ('plante', ...);` | **Create (INSERT)** : Bloc végétal fleuri colorable. |
 | **4** | 🎨 **Pinceau** | Viser un bloc + clic | `UPDATE blocs SET couleur = 'bleu' WHERE id = 3;` | **Update (UPDATE)** : Modification ciblée (ouvre la palette de couleur). |
 | **5** | 🪓 **Hache** | Viser un bloc + clic | `DELETE FROM blocs WHERE id = 2;` | **Delete (DELETE)** : Suppression de ligne avec explosion de débris. |
-| **6** | 🔍 **Loupe** | Clic sur des blocs | `SELECT * FROM blocs WHERE id IN (1, 4);` | **Read (SELECT)** : Sélection avec halos lumineux et tags 3D. |
-| **🔍 > 📋** | **Afficher** | Clic sur la toolbar | `SELECT * FROM blocs WHERE id IN (...);` | **Read (SELECT)** : Consultation des données brutes. |
-| **🔍 > 🔍** | **Filtrer** | Menu déroulant | `SELECT * FROM blocs WHERE type = 'beton';` | Clause **WHERE** (filtre par type ou par couleur). |
-| **🔍 > ↕️** | **Trier** | Menu déroulant | `SELECT * FROM blocs ORDER BY x ASC;` | Clause **ORDER BY** (badges numérotés 3D en jeu). |
-| **🔍 > 🔢** | **Compter** | Bouton | `SELECT COUNT(*) FROM blocs;` | Fonction d'agrégation **COUNT()**. |
-| **🔍 > 🔗** | **Relier** | Bouton | `SELECT blocs.id, zones.nom FROM blocs JOIN zones ON zones.id = blocs.zone_id;` | **Jointure relationnelle (JOIN)** : Faisceaux laser 3D reliant les blocs aux totems de zone et entre Nord et Sud ! |
+| **6** | 🔍 **Loupe** | Clic sur des blocs | `SELECT * FROM blocs WHERE id IN (1, 4);` | **Read (SELECT)** : Mode Requête épuré et ultra-rapide. |
+| **🔍 > 📋** | **Afficher** | Clic sur la toolbar | `SELECT * FROM blocs WHERE id IN (...);` | **Read (SELECT)** : Inspection des enregistrements ciblés. |
+| **🔍 > 🔢** | **Compter** | Clic sur la toolbar | `SELECT COUNT(*) FROM blocs;` | Fonction d'agrégation **COUNT()** : Nombre total calculé. |
+| **7** ou **R** | 🔗 **Relier** | Clic sur 2 blocs de zones différentes | `SELECT blocs.id, zones.nom FROM blocs JOIN zones ON zones.id = blocs.zone_id;` | **Jointure relationnelle (JOIN)** : Lasers holographiques reliant directement les 2 blocs entre eux et à leurs totems ! |
 
 ---
 
@@ -83,7 +83,7 @@ Un panneau de quêtes guide le joueur à travers 5 missions progressives :
 - [x] **Mission 2 : L'Artiste (UPDATE)** — Repeins un bloc avec le Pinceau (touche 4).
 - [x] **Mission 3 : Le Démolisseur (DELETE)** — Détruis un bloc avec la Hache (touche 5).
 - [x] **Mission 4 : L'Analyste (SELECT & COUNT)** — Sélectionne des blocs avec la Loupe (touche 6) et compte-les.
-- [x] **Mission 5 : L'Architecte Données (JOIN)** — Pose au moins un bloc au Nord et un au Sud, puis clique sur **Relier** !
+- [x] **Mission 5 : L'Architecte Données (JOIN)** — Relie 2 blocs de 2 zones différentes (Outil 7 Relier, touche R ou bouton Relier dans l'explorateur T) !
 
 🎉 **Récompense finale** : Pluie de confettis, fanfare de victoire et affichage d'un diplôme d'initiation présentant les débouchés passionnants du **BUT Science des Données** (Big Data, Intelligence Artificielle, Python, Dataviz).
 
