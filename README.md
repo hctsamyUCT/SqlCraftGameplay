@@ -158,6 +158,38 @@ Pour générer la version de production optimisée :
 npm run build
 ```
 
+---
+
+## 📦 Version Exécutable Windows (`.exe`) pour Professeur & Lycéens
+
+Le jeu a été converti en **application de bureau Windows native** grâce à **Electron** et **electron-builder**. Aucun terminal, ni Node.js, ni navigateur externe n'est requis sur le PC du professeur ou du joueur !
+
+### 🎯 Deux formats `.exe` prêts à l'emploi (dans le dossier `release/`) :
+
+1. **Version Portable Autonome (`SQL-Craft-Portable-1.0.0.exe`)** :
+   - **Recommandée pour une évaluation immédiate** : Un simple double-clic et le jeu démarre instantanément.
+   - **Aucune installation** nécessaire et aucun droit administrateur requis (fonctionne sur clé USB et PC de lycée/université).
+
+2. **Installateur Windows 1-Clic (`SQL Craft Setup 1.0.0.exe`)** :
+   - Installateur automatique NSIS.
+   - Crée le raccourci **SQL Craft** avec l'icône personnalisée sur le Bureau et dans le menu Démarrer, puis lance le jeu automatiquement.
+
+### 🔨 Commandes pour générer les `.exe` :
+
+```bash
+# Générer à la fois l'installateur et la version portable
+npm run dist
+
+# Générer uniquement l'exécutable portable
+npm run dist:portable
+
+# Générer uniquement l'installateur Setup
+npm run dist:installer
+
+# Tester l'application en mode bureau pendant le développement
+npm run electron:start
+```
+
 > ❓ **Pas de Git ?** Il est aussi possible de télécharger le projet au format ZIP depuis GitHub (*Bouton vert « Code » → Download ZIP*), puis de décompresser le dossier avant de lancer `npm install`.
 
 ---

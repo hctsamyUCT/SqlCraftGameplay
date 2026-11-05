@@ -1,23 +1,69 @@
 {
-  "name": "game",
+  "name": "sql-craft",
+  "productName": "SQL Craft",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
+  "description": "SQL Craft — Mini-jeu 3D ludo-pédagogique d'initiation au SQL et aux bases de données relationnelles",
+  "author": "SQL Craft Team",
   "type": "module",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron:start": "electron .",
+    "dist": "vite build && electron-builder",
+    "dist:win": "vite build && electron-builder --win",
+    "dist:portable": "vite build && electron-builder --win portable",
+    "dist:installer": "vite build && electron-builder --win nsis",
+    "pack": "vite build && electron-builder --dir"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
     "three": "^0.186.0"
   },
   "devDependencies": {
+    "electron": "^45.2.3",
+    "electron-builder": "^26.18.0",
     "vite": "^8.3.0"
+  },
+  "build": {
+    "appId": "fr.iut.sqlcraft",
+    "productName": "SQL Craft",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "SQL Craft",
+      "runAfterFinish": true
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    }
   }
 }
